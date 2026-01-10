@@ -1,0 +1,1 @@
+pnpm generatePluginJson pluginjson/plugins.json && pnpm generateEquicordPluginJson pluginjson/equicordplugins.json && pnpm generateVencordPluginJson pluginjson/vencordplugins.json

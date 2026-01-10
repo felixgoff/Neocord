@@ -9,7 +9,7 @@
     "type": "module",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Equicord/Equicord.git",
+        "url": "git+https://github.com/felixgoff/Neocord.git",
         "directory": "packages/discord-types"
     },
     "dependencies": {

@@ -1,6 +1,7 @@
 dist
 node_modules
 .VSCodeCounter
+pluginjson
 
 *.exe
 vencord_installer

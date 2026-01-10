@@ -9,7 +9,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Equicord/Equicord.git"
+        "url": "git+https://github.com/felixgoff/Neocord.git"
     },
     "license": "GPL-3.0-or-later",
     "author": "Equicord",
