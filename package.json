@@ -2,7 +2,7 @@
     "name": "neocord",
     "private": "true",
     "version": "1.13.12",
-    "description": "The other cutest Discord client mod",
+    "description": "The Cool Discord client mod",
     "homepage": "https://github.com/felixgoff/Neocord#readme",
     "bugs": {
         "url": "https://github.com/felixgoff/Neocord/issues"
@@ -12,7 +12,7 @@
         "url": "git+https://github.com/felixgoff/Neocord.git"
     },
     "license": "GPL-3.0-or-later",
-    "author": "Equicord",
+    "author": "felixgoff, HaraldErik, The Equicord & Vencord Contributors",
     "scripts": {
         "build": "node --require=./scripts/suppressExperimentalWarnings.js scripts/build/build.mjs",
         "buildStandalone": "pnpm build --standalone",
