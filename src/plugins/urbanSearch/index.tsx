@@ -12,7 +12,6 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 import { Forms } from "@webpack/common";
 
-
 const urbandictionarylogo = "https://cdn.discordapp.com/emojis/1385084313590173799.png";
 
 export default definePlugin({
