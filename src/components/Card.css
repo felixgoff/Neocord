@@ -1,6 +1,6 @@
 .vc-card-base {
     background: var(--card-background-default);
-    border-radius: var(--radius-sm, 8px)
+    border-radius: 22px;
 }
 
 .vc-card-normal {
