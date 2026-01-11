@@ -352,7 +352,7 @@ function EquicordSettings() {
     );
 }
 
-export default wrapTab(NeocordSettings, "Neocord Settings");
+export default wrapTab(EquicordSettings, "Neocord Settings");
 
 export function isEquicordDonor(userId: string): boolean {
     const donorBadges = BadgeAPI.getEquicordDonorBadges(userId);
