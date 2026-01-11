@@ -92,7 +92,7 @@ interface SettingsLayoutBuilder {
 const settings = definePluginSettings({
     settingsLocation: {
         type: OptionType.SELECT,
-        description: "Where to put the Equicord settings section",
+        description: "Where to put the Neocord settings section",
         options: [
             { label: "At the very top", value: "top" },
             { label: "Above the Nitro section", value: "aboveNitro", default: true },
@@ -230,7 +230,7 @@ export default definePlugin({
             buildEntry({
                 key: "equicord_main",
                 title: "Equicord",
-                panelTitle: "Equicord Settings",
+                panelTitle: "Neocord Settings",
                 Component: VencordTab,
                 Icon: MainSettingsIcon
             }),
@@ -320,12 +320,12 @@ export default definePlugin({
         return [
             {
                 section: SectionTypes.HEADER,
-                label: "Equicord",
+                label: "Neocord",
                 className: "vc-settings-header",
             },
             {
                 section: "EquicordSettings",
-                label: "Equicord",
+                label: "Neocord",
                 element: VencordTab,
                 className: "vc-settings",
             },
