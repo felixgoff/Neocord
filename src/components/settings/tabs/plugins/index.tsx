@@ -113,7 +113,7 @@ export const ExcludedReasons: Record<"web" | "discordDesktop" | "vesktop" | "equ
     vesktop: "Vesktop/Equibop apps",
     equibop: "Vesktop/Equibop apps",
     web: "Vesktop/Equibop apps & Discord web",
-    dev: "Developer version of Equicord"
+    dev: "Developer version of Neocord"
 };
 
 function ExcludedPluginsList({ search }: { search: string; }) {

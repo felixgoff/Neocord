@@ -1,11 +1,11 @@
 {
-    "name": "equicord",
+    "name": "neocord",
     "private": "true",
     "version": "1.13.12",
     "description": "The other cutest Discord client mod",
-    "homepage": "https://github.com/Equicord/Equicord#readme",
+    "homepage": "https://github.com/felixgoff/Neocord#readme",
     "bugs": {
-        "url": "https://github.com/Equicord/Equicord/issues"
+        "url": "https://github.com/felixgoff/Neocord/issues"
     },
     "repository": {
         "type": "git",
