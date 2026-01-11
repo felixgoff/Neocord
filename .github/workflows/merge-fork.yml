@@ -22,7 +22,11 @@ jobs:
         run: git fetch upstream
 
       - name: Merge upstream into fork
-        run: git merge upstream/main --allow-unrelated-histories -m "Sync from upstream"
+        run: | 
+          git config --global user.name "GitHub-Actions"
+          git config --global user.email actions@github.com
+          
+          git merge upstream/main --allow-unrelated-histories -m "Sync from upstream"
 
       - name: Push changes
         run: git push origin main
