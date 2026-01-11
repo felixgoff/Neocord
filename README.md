@@ -7,9 +7,5 @@ Thank you to [Vendicated](https://github.com/Vendicated) for creating [Vencord](
 ## Star History
 
 <a href="https://star-history.com/#felixgoff/Neocord&Timeline">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=felixgoff/Neocord&type=Timeline&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=felixgoff/Neocord&type=Timeline" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=felixgoff/Neocord&type=Timeline" />
-  </picture>
+<iframe style="width:100%;height:auto;min-width:600px;min-height:400px;" src="https://www.star-history.com/embed?secret=Z2hwX0NTeE1mZkIyejNTZ1JlbURnaVNaR3czb0FqTjI0dTEwa1R6cQ==#felixgoff/Neocord&type=timeline&legend=top-left" frameBorder="0"></iframe>
 </a>
