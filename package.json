@@ -2,7 +2,7 @@
     "name": "neocord",
     "private": "true",
     "version": "1.13.12",
-    "description": "The Cool Discord client mod",
+    "description": "The cool Discord client mod",
     "homepage": "https://github.com/felixgoff/Neocord#readme",
     "bugs": {
         "url": "https://github.com/felixgoff/Neocord/issues"
