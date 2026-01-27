@@ -34,6 +34,7 @@ const actions: { label: string; value: ClickAction; }[] = [
 
 const doubleClickOwnActions: { label: string; value: ClickAction; }[] = [
     { label: "None", value: "NONE" },
+    { label: "Reply", value: "REPLY" },
     { label: "Edit", value: "EDIT" },
     { label: "Quote", value: "QUOTE" },
     { label: "Copy Content", value: "COPY_CONTENT" },
@@ -88,6 +89,11 @@ const focusChanged = () => {
     }
 };
 
+let lastMouseDownTime = 0;
+const onMouseDown = () => {
+    lastMouseDownTime = Date.now();
+};
+
 function modifierFromKey(e: KeyboardEvent): Modifier | null {
     if (e.key === "Shift") return "SHIFT";
     if (e.key === "Control") return "CTRL";
@@ -96,7 +102,8 @@ function modifierFromKey(e: KeyboardEvent): Modifier | null {
 }
 
 function isModifierPressed(modifier: Modifier): boolean {
-    return modifier === "NONE" || pressedModifiers.has(modifier);
+    if (modifier === "NONE") return pressedModifiers.size === 0;
+    return pressedModifiers.has(modifier);
 }
 
 let doubleClickTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -164,6 +171,11 @@ const settings = definePluginSettings({
     clickTimeout: {
         type: OptionType.NUMBER,
         description: "Timeout to distinguish double/triple clicks (ms)",
+        default: 300
+    },
+    selectionHoldTimeout: {
+        type: OptionType.NUMBER,
+        description: "Timeout to allow text selection (ms)",
         default: 300
     },
     quoteWithReply: {
@@ -453,12 +465,14 @@ export default definePlugin({
     start() {
         document.addEventListener("keydown", keydown);
         document.addEventListener("keyup", keyup);
+        document.addEventListener("mousedown", onMouseDown);
         WindowStore.addChangeListener(focusChanged);
     },
 
     stop() {
         document.removeEventListener("keydown", keydown);
         document.removeEventListener("keyup", keyup);
+        document.removeEventListener("mousedown", onMouseDown);
         WindowStore.removeChangeListener(focusChanged);
 
         if (doubleClickTimeout) {
@@ -473,8 +487,11 @@ export default definePlugin({
     },
 
     onMessageClick(msg, channel, event) {
-        const target = event.target as HTMLElement;
-        if (target.closest('a, button, input, img, [class*="repliedTextPreview"], [class*="threadMessageAccessory"]')) return;
+        let target = event.target as HTMLElement;
+        if (target.nodeType === Node.TEXT_NODE) target = target.parentElement as HTMLElement;
+
+        // dont look, please just dont
+        if (target.closest('a, button, input, img, video, audio, [role="button"], [role="link"], [role="menuitem"], [class*="repliedTextPreview"], [class*="threadMessageAccessory"], [class*="spoilerText"], [class*="mention"]')) return;
         if (!target.closest('[class*="message"]')) return;
 
         const myId = AuthenticationStore.getId();
@@ -497,6 +514,8 @@ export default definePlugin({
         const isSingleClick = event.detail === 1 && event.button === 0;
         const isDoubleClick = event.detail === 2;
         const isTripleClick = event.detail === 3;
+
+        if (Date.now() - lastMouseDownTime > settings.store.selectionHoldTimeout) return;
 
         if (singleClickTimeout) {
             clearTimeout(singleClickTimeout);
@@ -533,7 +552,7 @@ export default definePlugin({
                 }
             };
 
-            if (canTripleClick) {
+            if (canTripleClick && canDoubleClick) {
                 if (doubleClickTimeout) {
                     clearTimeout(doubleClickTimeout);
                 }
@@ -551,13 +570,14 @@ export default definePlugin({
         }
 
         if (isSingleClick) {
+            const shouldExecuteSingle = isModifierPressed(singleClickModifier) && singleClickAction !== "NONE";
             const executeSingleClick = () => {
-                if (isModifierPressed(singleClickModifier) && singleClickAction !== "NONE") {
+                if (shouldExecuteSingle) {
                     executeAction(singleClickAction, msg, channel, event);
                 }
             };
 
-            if (canDoubleClick) {
+            if (canDoubleClick && shouldExecuteSingle) {
                 singleClickTimeout = setTimeout(() => {
                     executeSingleClick();
                     singleClickTimeout = null;

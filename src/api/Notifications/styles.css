@@ -138,5 +138,5 @@
 
 .vc-notification-log-danger-btn {
     color: var(--white-500);
-    background-color: var(--redesign-button-danger-background);
+    background-color: var(--status-danger);
 }

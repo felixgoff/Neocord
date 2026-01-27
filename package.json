@@ -1,7 +1,7 @@
 {
     "name": "neocord",
     "private": "true",
-    "version": "1.13.12",
+    "version": "1.14.1.0",
     "description": "The cool Discord client mod",
     "homepage": "https://github.com/felixgoff/Neocord#readme",
     "bugs": {
@@ -9,7 +9,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/felixgoff/Neocord.git"
+        "url": "git+https://gi thub.com/felixgoff/Neocord.git"
     },
     "license": "GPL-3.0-or-later",
     "author": "felixgoff, HaraldErik, The Equicord & Vencord Contributors",
