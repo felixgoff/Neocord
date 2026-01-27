@@ -161,7 +161,7 @@ async function runUpdateCheck() {
         if (notifiedForUpdatesThisSession) return;
         notifiedForUpdatesThisSession = true;
 
-        showNotice(Neocord
+        showNotice(Neocord,
             "A new version of Neocord is available!",
             "View Update",
             () => openSettingsTabModal(UpdaterTab!)
