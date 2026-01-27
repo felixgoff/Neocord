@@ -150,7 +150,7 @@ async function runUpdateCheck() {
                 notifiedForUpdatesThisSession = true;
 
                 showNotice(
-                    "Equicord has been updated!",
+                    "Neocord has been updated!",
                     "Restart",
                     relaunch
                 );
@@ -161,8 +161,8 @@ async function runUpdateCheck() {
         if (notifiedForUpdatesThisSession) return;
         notifiedForUpdatesThisSession = true;
 
-        showNotice(
-            "A new version of Equicord is available!",
+        showNotice(Neocord
+            "A new version of Neocord is available!",
             "View Update",
             () => openSettingsTabModal(UpdaterTab!)
         );
