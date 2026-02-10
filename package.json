@@ -1,7 +1,7 @@
 {
     "name": "neocord",
     "private": "true",
-    "version": "1.14.1.1",
+    "version": "1.14.2.0",
     "description": "The cool Discord client mod",
     "homepage": "https://github.com/felixgoff/Neocord#readme",
     "bugs": {
