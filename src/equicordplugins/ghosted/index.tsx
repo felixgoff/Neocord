@@ -8,7 +8,7 @@ import "./styles.css";
 
 import { findGroupChildrenByChildId } from "@api/ContextMenu";
 import { addServerListElement, removeServerListElement, ServerListRenderPosition } from "@api/ServerList";
-import { definePluginSettings, migratePluginSettings } from "@api/Settings";
+import { definePluginSettings } from "@api/Settings";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Devs, EquicordDevs } from "@utils/constants";
 import { classNameFactory } from "@utils/css";
@@ -100,7 +100,7 @@ function BooIndicator() {
 
     return (
         <>
-            {settings.store.showIndicator && (
+            {settings.store.showIndicator && getGhostedChannels().length > 0 && (
                 <div id={cl("container")}>
                     <Tooltip text={getTooltipText()} position="right">
                         {({ onMouseEnter, onMouseLeave }) => (
@@ -132,7 +132,6 @@ function makeContextItem(props) {
     />;
 }
 
-migratePluginSettings("Ghosted", "Boo");
 export default definePlugin({
     name: "Ghosted",
     description: "A cute ghost will appear if you don't answer their DMs",
@@ -152,9 +151,9 @@ export default definePlugin({
 
     patches: [
         {
-            find: "interactiveSelected]",
+            find: "PrivateChannel.renderAvatar",
             replacement: {
-                match: /interactiveSelected.{0,50}children:\[/,
+                match: /\]:\i\|\|\i.{0,50}children:\[/,
                 replace: "$&$self.renderBoo(arguments[0]),"
             }
         },

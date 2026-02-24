@@ -21,7 +21,7 @@ import { ApplicationCommandInputType, ApplicationCommandOptionType, findOption, 
 import { findGroupChildrenByChildId, NavContextMenuPatchCallback } from "@api/ContextMenu";
 import { plugins } from "@api/PluginManager";
 import { definePluginSettings } from "@api/Settings";
-import { openPluginModal } from "@components/index";
+import { openPluginModal } from "@components/settings";
 import { Devs, EquicordDevs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { Channel } from "@vencord/discord-types";
@@ -328,8 +328,8 @@ export default definePlugin({
                     replace: "const silentTypingShouldHideChatBarTypingIndicators=$self.shouldHideChatBarTypingIndicators();$1"
                 },
                 {
-                    match: /(typingDots,ref:\i,children:)(\[.{0,340}?}\)\])/,
-                    replace: "$1silentTypingShouldHideChatBarTypingIndicators?[]:$2"
+                    match: /("stop-animation".{0,80}?ref:\i,children:)/,
+                    replace: "$1silentTypingShouldHideChatBarTypingIndicators?[]:"
                 }
             ]
         },

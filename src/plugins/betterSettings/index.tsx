@@ -5,22 +5,33 @@
  */
 
 import { definePluginSettings } from "@api/Settings";
-import { classNameFactory, disableStyle, enableStyle } from "@api/Styles";
+import { disableStyle, enableStyle } from "@api/Styles";
 import { buildPluginMenuEntries, buildThemeMenuEntries } from "@equicordplugins/equicordToolbox/menu";
+import SettingsPlugin from "@plugins/_core/settings";
 import { Devs } from "@utils/constants";
+import { classNameFactory } from "@utils/css";
 import { Logger } from "@utils/Logger";
 import definePlugin, { OptionType } from "@utils/types";
-import { waitFor } from "@webpack";
+import { findCssClassesLazy } from "@webpack";
 import { ComponentDispatch, FocusLock, Menu, useEffect, useRef } from "@webpack/common";
 import type { HTMLAttributes, ReactElement } from "react";
 
 import fullHeightStyle from "./fullHeightContext.css?managed";
 
-type SettingsEntry = { section: string, label: string; };
+type SettingsEntry = {
+    ariaLabel?: string;
+    element?: any;
+    label?: string;
+    newIndicator?: any;
+    newIndicatorDismissibleContentTypes?: number[];
+    predicate?: () => boolean;
+    searchableTitles?: string[];
+    section: string,
+    tabPredicate?: () => boolean;
+};
 
 const cl = classNameFactory("");
-let Classes: Record<string, string>;
-waitFor(["animating", "baseLayer", "bg", "layer", "layers"], m => Classes = m);
+const Classes = findCssClassesLazy("animating", "baseLayer", "bg", "layer", "layers");
 
 const settings = definePluginSettings({
     disableFade: {
@@ -100,9 +111,9 @@ export default definePlugin({
         {
             find: "this.renderArtisanalHack()",
             replacement: [
-                { // Fade in on layer
-                    match: /(?<=\((\i),"contextType",\i\.\i\);)/,
-                    replace: "$1=$self.Layer;",
+                {
+                    match: /class (\i)(?= extends \i\.PureComponent.+?static contextType=.+?jsx\)\(\1,\{mode:)/,
+                    replace: "var $1=$self.Layer;class VencordPatchedOldFadeLayer",
                     predicate: () => settings.store.disableFade
                 },
                 { // Lazy-load contents
@@ -127,10 +138,10 @@ export default definePlugin({
             predicate: () => settings.store.disableFade
         },
         { // Load menu TOC eagerly
-            find: "#{intl::USER_SETTINGS_WITH_BUILD_OVERRIDE}",
+            find: "handleOpenSettingsContextMenu=",
             replacement: {
-                match: /(\i)\(this,"handleOpenSettingsContextMenu",.{0,100}?null!=\i&&.{0,100}?(await [^};]*?\)\)).*?,(?=\1\(this)/,
-                replace: "$&(async ()=>$2)(),"
+                match: /(?=handleOpenSettingsContextMenu=.{0,100}?null!=\i&&.{0,100}?(await [^};]*?\)\)))/,
+                replace: "_vencordBetterSettingsEagerLoad=(async ()=>$1)();"
             },
             predicate: () => settings.store.eagerLoad
         },
@@ -139,13 +150,13 @@ export default definePlugin({
             find: "#{intl::USER_SETTINGS_ACTIONS_MENU_LABEL}",
             replacement: [
                 {
-                    match: /=\[\];if\((\i)(?=\.forEach.{0,100}"logout"!==\i.{0,30}(\i)\.get\(\i\))/,
-                    replace: "=$self.wrapMap([]);if($self.transformSettingsEntries($1,$2)",
+                    match: /=\[\];(\i)(?=\.forEach.{0,200}?"logout"===\i.{0,100}?(\i)\.get\(\i\))/,
+                    replace: "=$self.wrapMap([]);$self.transformSettingsEntries($1,$2)",
                     predicate: () => settings.store.organizeMenu
                 },
                 {
                     match: /case \i\.\i\.DEVELOPER_OPTIONS:return \i;/,
-                    replace: "$&case 'EquicordPlugins':return $self.buildPluginMenuEntries(true);$&case 'EquicordThemes':return $self.buildThemeMenuEntries();"
+                    replace: "$&case 'EquicordPlugins':return $self.buildPluginMenuEntries(true);case 'EquicordThemes':return $self.buildThemeMenuEntries();"
                 }
             ]
         },
@@ -160,7 +171,7 @@ export default definePlugin({
     // Thus, we sanity check webpack modules
     Layer(props: LayerProps) {
         try {
-            [FocusLock.$$vencordGetWrappedComponent(), ComponentDispatch, Classes].forEach(e => e.test);
+            [FocusLock.$$vencordGetWrappedComponent(), ComponentDispatch, Classes.layer].forEach(e => e.test);
         } catch {
             new Logger("BetterSettings").error("Failed to find some components");
             return props.children;
@@ -173,6 +184,8 @@ export default definePlugin({
         const items = [] as TransformedSettingsEntry[];
 
         for (const item of list) {
+            if (!item.label || item.predicate != null && !item.predicate()) continue;
+
             if (item.section === "HEADER") {
                 keyMap.set(item.label, item.label);
                 items.push({ section: item.label, items: [] });
@@ -180,6 +193,28 @@ export default definePlugin({
                 items.at(-1)?.items.push(item);
             }
         }
+
+        keyMap.set("Equicord", "Equicord");
+        const equicordItems: SettingsEntry[] = [
+            { section: "EquicordSettings", label: "Settings" },
+            { section: "EquicordPlugins", label: "Plugins" },
+            { section: "EquicordThemes", label: "Themes" },
+            { section: "EquicordUpdater", label: "Updater" },
+            { section: "EquicordChangelog", label: "Changelog" },
+            { section: "EquicordCloud", label: "Cloud" },
+            { section: "EquicordBackupAndRestore", label: "Backup & Restore" },
+            { section: "EquicordPatchHelper", label: "Patch Helper" },
+        ];
+
+        for (const [section, key] of SettingsPlugin.settingsSectionMap) {
+            const entry = SettingsPlugin.customEntries.find(e => key.endsWith(e.key));
+            if (entry) equicordItems.push({ section, label: entry.title });
+        }
+
+        items.push({
+            section: "Equicord",
+            items: equicordItems
+        });
 
         return items;
     },

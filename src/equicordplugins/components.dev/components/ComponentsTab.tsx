@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import "../styles.css";
-
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Heading } from "@components/Heading";
 import { SettingsTab, wrapTab } from "@components/settings";
@@ -40,7 +38,6 @@ import MenuTab from "./tabs/MenuTab";
 import ModalTab from "./tabs/ModalTab";
 import NoticeTab from "./tabs/NoticeTab";
 import PaginatorTab from "./tabs/PaginatorTab";
-import PopoutTab from "./tabs/PopoutTab";
 import PopoverTab from "./tabs/PopoverTab";
 import ProgressBarTab from "./tabs/ProgressBarTab";
 import RadioGroupTab from "./tabs/RadioGroupTab";
@@ -90,7 +87,6 @@ const TABS = [
     { id: "modal", label: "Modal" },
     { id: "notice", label: "Notice" },
     { id: "paginator", label: "Paginator" },
-    { id: "popout", label: "Popout" },
     { id: "popover", label: "Popover" },
     { id: "progressbar", label: "ProgressBar" },
     { id: "radiogroup", label: "RadioGroup" },
@@ -144,7 +140,6 @@ const TAB_COMPONENTS: Record<TabId, React.ComponentType> = {
     modal: ModalTab,
     notice: NoticeTab,
     paginator: PaginatorTab,
-    popout: PopoutTab,
     popover: PopoverTab,
     progressbar: ProgressBarTab,
     radiogroup: RadioGroupTab,

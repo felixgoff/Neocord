@@ -13,18 +13,18 @@ import { HeadingPrimary, HeadingTertiary } from "@components/Heading";
 import { OpenExternalIcon } from "@components/Icons";
 import { Paragraph } from "@components/Paragraph";
 import { SettingsTab, wrapTab } from "@components/settings";
-import { SearchStatus, TabItem, Theme, ThemeLikeProps } from "@equicordplugins/themeLibrary/types";
+import { SearchStatus, Theme, ThemeLikeProps } from "@equicordplugins/themeLibrary/types";
 import { Logger } from "@utils/Logger";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
-import { findByPropsLazy } from "@webpack";
-import { Button, React, SearchableSelect, TabBar, TextInput, useEffect, useState } from "@webpack/common";
+import { findCssClassesLazy } from "@webpack";
+import { Button, React, SearchableSelect, TextInput, useEffect, useState } from "@webpack/common";
 
 import { ThemeCard } from "./ThemeCard";
 
-const InputStyles = findByPropsLazy("inputWrapper", "inputError", "error");
+const InputStyles = findCssClassesLazy("inputWrapper", "inputError", "error");
 
-export const apiUrl = "https://discord-themes.com/api";
+export const apiUrl = "https://themes.equicord.org/api";
 export const logger = new Logger("ThemeLibrary", "#e5c890");
 
 export async function fetchAllThemes(): Promise<Theme[]> {
@@ -262,63 +262,10 @@ function ThemeTab() {
     );
 }
 
-// rework this!
-function SubmitThemes() {
-    return (
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "70vh",
-                fontSize: "1.5em",
-                color: "var(--text-default)"
-            }}>
-            <p>
-                This tab was replaced in favour of the new website:
-                {" "}
-                <a href="https://discord-themes.com" target="_blank" rel="noreferrer">
-                    discord-themes.com
-                </a>
-            </p>
-            <p style={{
-                fontSize: ".75em",
-                color: "var(--text-muted)"
-            }}>
-                Thank you for your understanding!
-            </p>
-        </div>
-    );
-}
-
 function ThemeLibrary() {
-    const [currentTab, setCurrentTab] = useState(TabItem.THEMES);
-
     return (
         <SettingsTab>
-            <TabBar
-                type="top"
-                look="brand"
-                className="vc-settings-tab-bar"
-                selectedItem={currentTab}
-                onItemSelect={setCurrentTab}
-            >
-                <TabBar.Item
-                    className="vc-settings-tab-bar-item"
-                    id={TabItem.THEMES}
-                >
-                    Themes
-                </TabBar.Item>
-                <TabBar.Item
-                    className="vc-settings-tab-bar-item"
-                    id={TabItem.SUBMIT_THEMES}
-                >
-                    Submit Theme
-                </TabBar.Item>
-            </TabBar>
-
-            {currentTab === TabItem.THEMES ? <ThemeTab /> : <SubmitThemes />}
+            <ThemeTab />
         </SettingsTab>
     );
 }

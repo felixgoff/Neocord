@@ -94,8 +94,8 @@ export default definePlugin({
             // Channel list server boost progress bar
             find: "useGuildActionRow",
             replacement: {
-                match: /\i\.premiumProgressBarEnabled&&[^,]+/,
-                replace: "null"
+                match: /(GUILD_NEW_MEMBER_ACTIONS_PROGRESS_BAR\)):(\i(?:\.premiumProgressBarEnabled)?)/,
+                replace: "$1:null"
             },
             predicate: () => settings.store.serverBoost,
         },
@@ -111,7 +111,10 @@ export default definePlugin({
         {
             // Gift button
             find: '"sticker")',
-            replacement: { match: /&&\i\.push\(\{[^&]*?,"gift"\)\}\)/, replace: "", },
+            replacement: {
+                match: /&&\i\.push\(\([^&]*?,"gift"\)\)/,
+                replace: "",
+            },
             predicate: () => settings.store.gift,
         },
         {

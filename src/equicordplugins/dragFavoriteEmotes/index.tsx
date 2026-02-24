@@ -22,12 +22,12 @@ import { EquicordDevs } from "@utils/constants";
 import { classNameFactory } from "@utils/css";
 import { classes } from "@utils/misc";
 import definePlugin from "@utils/types";
-import { findByPropsLazy } from "@webpack";
+import { findByPropsLazy, findCssClassesLazy } from "@webpack";
 import { useDrag, useDrop, useLayoutEffect, useRef, UserSettingsActionCreators } from "@webpack/common";
 
 const UserSettingsDelay = findByPropsLazy("INFREQUENT_USER_ACTION");
-const imgCls = findByPropsLazy("image", "imageLoading");
-const dndCls = findByPropsLazy("wrapper", "target", "dragOver");
+const imgCls = findCssClassesLazy("image", "imageLoading");
+const dndCls = findCssClassesLazy("wrapper", "target", "autoPointerEvents", "dragOver");
 
 const cl = classNameFactory("vc-drag-favorite-emotes-");
 
@@ -54,7 +54,7 @@ export default definePlugin({
                     replace: "$1arguments[0]?.collected?.isDragging?$self.dragItem():$2",
                 },
                 {
-                    match: /\[(\i\.emojiItemSelected)\]/,
+                    match: /\[(\i\.\i)\](?=.{0,5}\[\i\?\?)/,
                     replace: '[arguments[0].collected.isDragging?"":$1]',
                 },
                 {
@@ -62,11 +62,11 @@ export default definePlugin({
                     replace: "$1,[collected,drag]=$self.drag(arguments[0])",
                 },
                 {
-                    match: /(onFocus".{0,50}\(\i,{ref:)(\i),/,
+                    match: /(onFocus:.{0,50}\(\i,{ref:)(\i),/,
                     replace: '$1arguments[0]?.descriptor?.category==="FAVORITES"?drag:$2,collected:collected,',
                 },
                 {
-                    match: /(,\{key:\i,ref:\i)(?=\}\),)/,
+                    match: /(key:\i,ref:\i)(?=\},\i)/,
                     replace: '$1,style:{position:"relative"}',
                 },
                 {

@@ -39,7 +39,7 @@ export class User extends DiscordRecord {
     get avatarDecoration(): AvatarDecorationData | null;
     get createdAt(): Date;
     get isProvisional(): boolean;
-    get nameplate(): { asset: string; sku_id: string; } | null;
+    get nameplate(): { asset: string; skuId: string; } | null;
     get premiumGroupRole(): { id: string; name: string; color: number; } | null;
     get tag(): string;
 
@@ -82,4 +82,53 @@ export interface UserJSON {
     publicFlags: UserFlags;
     username: string;
     globalName: string | undefined;
+}
+
+export interface ProfileEffect {
+    skuId: string;
+    title?: string;
+    description?: string;
+    accessibilityLabel?: string;
+    reducedMotionSrc?: string;
+    thumbnailPreviewSrc?: string;
+    effects?: any[];
+    animationType?: number;
+    staticFrameSrc?: string;
+    type?: number;
+}
+
+export interface Nameplate {
+    skuId: string;
+    asset: string;
+    label?: string;
+    palette?: string;
+    type?: number;
+}
+
+export interface ProfilePreset {
+    name: string;
+    timestamp: number;
+    avatarDataUrl?: string | null;
+    bannerDataUrl?: string | null;
+    bio?: string | null;
+    accentColor?: number | null;
+    themeColors?: number[] | null;
+    globalName?: string | null;
+    pronouns?: string | null;
+    avatarDecoration?: {
+        asset: string;
+        skuId: string;
+    } | null;
+    profileEffect?: ProfileEffect | null;
+    nameplate?: Nameplate | null;
+    primaryGuildId?: string | null;
+    customStatus?: CustomStatus | null;
+    displayNameStyles?: DisplayNameStyles | null;
+}
+
+export interface CustomStatus {
+    text?: string;
+    emojiId?: string;
+    emojiName?: string;
+    expiresAtMs?: string;
 }
