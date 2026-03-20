@@ -20,7 +20,7 @@ import { gitHashShort } from "@shared/vencordUserAgent";
 import { Devs } from "@utils/constants";
 import { isTruthy } from "@utils/guards";
 import definePlugin, { IconProps, OptionType } from "@utils/types";
-import { findByPropsLazy } from "@webpack";
+import { waitFor } from "@webpack";
 import { React } from "@webpack/common";
 import type { ComponentType, PropsWithChildren, ReactNode } from "react";
 
@@ -46,7 +46,14 @@ const enum LayoutType {
     CUSTOM = 18
 }
 
-const LayoutTypes: typeof LayoutType = findByPropsLazy("SECTION", "SIDEBAR_ITEM", "PANEL");
+let LayoutTypes = {
+    SECTION: 1,
+    SIDEBAR_ITEM: 2,
+    PANEL: 3,
+    CATEGORY: 5,
+    CUSTOM: 19,
+};
+waitFor(["SECTION", "SIDEBAR_ITEM", "PANEL", "CUSTOM"], v => LayoutTypes = v);
 
 const enum SectionType {
     HEADER = "HEADER",
@@ -158,13 +165,6 @@ export default definePlugin({
                 match: /(\i)\.buildLayout\(\)(?=\.map)/,
                 replace: "$self.buildLayout($1)"
             }
-        },
-        {
-            find: "getWebUserSettingFromSection",
-            replacement: {
-                match: /new Map\(\[(?=\[.{0,10}\.ACCOUNT,.{0,10}\.ACCOUNT_PANEL)/,
-                replace: "new Map([...$self.getSettingsSectionMappings(),"
-            }
         }
     ],
 
@@ -175,20 +175,25 @@ export default definePlugin({
             key: key + "_panel",
             type: LayoutTypes.PANEL,
             useTitle: () => panelTitle,
-            buildLayout: () => [],
-            StronglyDiscouragedCustomComponent: () => <Component />,
-            render: () => <Component />,
+            buildLayout: () => [{
+                type: LayoutTypes.CATEGORY,
+                key: key + "_category",
+                buildLayout: () => [{
+                    type: LayoutTypes.CUSTOM,
+                    key: key + "_custom",
+                    Component: Component,
+                    useSearchTerms: () => [title]
+                }]
+            }]
         };
 
-        return {
+        return ({
             key,
             type: LayoutTypes.SIDEBAR_ITEM,
-            legacySearchKey: title.toUpperCase(),
-            getLegacySearchKey: () => title.toUpperCase(),
             useTitle: () => title,
             icon: () => <Icon width={20} height={20} />,
             buildLayout: () => [panel]
-        };
+        });
     },
 
     getSettingsSectionMappings() {
