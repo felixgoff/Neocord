@@ -7,9 +7,13 @@
 import "./style.css";
 
 import { definePluginSettings } from "@api/Settings";
+import ErrorBoundary from "@components/ErrorBoundary";
 import { Devs, EquicordDevs } from "@utils/constants";
+import { classNameFactory } from "@utils/css";
 import definePlugin, { OptionType } from "@utils/types";
 import { UserStore } from "@webpack/common";
+
+const cl = classNameFactory("vc-char-counter-");
 
 const settings = definePluginSettings({
     colorEffects: {
@@ -27,10 +31,12 @@ export default definePlugin({
     patches: [
         {
             find: ".CREATE_FORUM_POST||",
-            replacement: {
-                match: /(textValue:.{0,50}channelId:\i\.id\}\)),\i/,
-                replace: "$1,$self.getCharCounter(arguments[0].textValue)"
-            }
+            replacement: [
+                {
+                    match: /(textValue:.{0,50}channelId:\i\.id\}\),)\i/,
+                    replace: "$1$self.renderCharCounter(arguments[0].textValue)"
+                }
+            ]
         },
         {
             find: "#{intl::PREMIUM_MESSAGE_LENGTH_UPSELL_TOOLTIP}",
@@ -40,8 +46,8 @@ export default definePlugin({
             }
         }
     ],
-    getCharCounter(text: string) {
-        const premiumType = (UserStore.getCurrentUser().premiumType ?? 0);
+    renderCharCounter: ErrorBoundary.wrap(text => {
+        const premiumType = (UserStore.getCurrentUser()?.premiumType ?? 0);
         const charMax = premiumType === 2 ? 4000 : 2000;
         const { length } = text;
 
@@ -54,11 +60,12 @@ export default definePlugin({
             else color = "var(--red-360)";
         }
 
+        if (!length) return null;
         return (
-            <div className="vc-char-counter" style={{ color }}>
-                <span className="vc-char-count">{length}</span>/
-                <span className="vc-char-max">{charMax}</span>
+            <div className={cl("counter")} style={{ color }}>
+                <span className={cl("count")} >{length}</span>/
+                <span className={cl("max")} >{charMax}</span>
             </div>
         );
-    }
+    }, { noop: true })
 });
